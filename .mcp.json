@@ -4,7 +4,7 @@
       "command": "npx",
       "args": ["-y", "mcp-ethers-wallet"],
       "env": {
-        "RPC_URL": "${SEPOLIA_RPC_URL}",
+        "RPC_URL": "https://eth-sepolia.g.alchemy.com/v2/vZL45FR0U1wxyM8RFecre",
         "CHAIN_ID": "11155111",
         "NETWORK_NAME": "sepolia"
       }
