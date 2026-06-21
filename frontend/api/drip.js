@@ -4,7 +4,7 @@ import { Redis } from '@upstash/redis';
 
 const privy = new PrivyClient(process.env.PRIVY_APP_ID, process.env.PRIVY_APP_SECRET);
 const redis = new Redis({ url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN });
-const DRIP_AMOUNT = ethers.parseEther('0.001');
+const DRIP_AMOUNT = ethers.parseEther('0.01');
 const dripInFlight = new Set();
 
 function getProvider() {

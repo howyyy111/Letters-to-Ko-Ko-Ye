@@ -14,7 +14,7 @@ app.use(cors({
 }));
 
 const privy = new PrivyClient(process.env.PRIVY_APP_ID, process.env.PRIVY_APP_SECRET);
-const DRIP_AMOUNT = ethers.parseEther('0.001');
+const DRIP_AMOUNT = ethers.parseEther('0.01');
 const dripInFlight = new Set();
 
 const MESSAGES_ABI = [
