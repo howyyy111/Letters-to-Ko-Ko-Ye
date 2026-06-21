@@ -1,0 +1,19 @@
+{
+  "drips": {
+    "undefined": {
+      "walletAddress": "0x237D810366436B45aA7D97B8d89Db9D21cD521Fb",
+      "txHash": "0x1e5df85438ddadb7e0dbf5b8e2ec7542dac8972f04f7a5800ae515759b17ad3e",
+      "createdAt": "2026-06-20T23:06:52.475Z"
+    },
+    "did:privy:cmqmyvi7300190bjyoyc29efy": {
+      "walletAddress": "0x237D810366436B45aA7D97B8d89Db9D21cD521Fb",
+      "txHash": "0x95fcad4d6cf19c95ad9a19ef07eb405e4c697098a3cd33cf786793da8b95997c",
+      "createdAt": "2026-06-20T23:09:03.231Z"
+    },
+    "did:privy:cmqn0fu7t00b80djsx6tn1th3": {
+      "walletAddress": "0xAA665f4B16D91992374afF2213cfbf5b7fe8dc1e",
+      "txHash": "0xf0fee6070204c125f8dfa6888a3f7ad2545d0f2c3ab70058106cf8efd8840fd2",
+      "createdAt": "2026-06-20T23:56:25.080Z"
+    }
+  }
+}

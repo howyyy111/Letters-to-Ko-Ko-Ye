@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "ethers-sepolia": {
+      "command": "npx",
+      "args": ["-y", "mcp-ethers-wallet"],
+      "env": {
+        "RPC_URL": "${SEPOLIA_RPC_URL}",
+        "CHAIN_ID": "11155111",
+        "NETWORK_NAME": "sepolia"
+      }
+    }
+  }
+}
