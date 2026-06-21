@@ -137,6 +137,57 @@ The frontend talks to both the backend (to send your letter) and directly to the
 
 ---
 
+### Which blockchain is this on? And what does that mean?
+
+Not all blockchains are the same. There are many of them — Bitcoin, Ethereum, Solana, and dozens of others — each one is a separate shared notebook with its own rules and its own community of computers maintaining it.
+
+**This project runs on Ethereum.** Ethereum is the second largest blockchain in the world, launched in 2015. It's the one that introduced the idea of "smart contracts" — those vending machine rules we talked about earlier. Most serious blockchain projects that do more than just move money are built on Ethereum.
+
+---
+
+### But right now it's on something called "Sepolia" — what's that?
+
+Here's a helpful analogy. When engineers build a new bridge, they don't test it by driving a thousand real cars over it immediately. They run stress tests first. They use a copy.
+
+Ethereum has the same idea. **Sepolia is a test version of Ethereum** — a copy that works exactly the same way technically, but where everything is pretend. The "ETH" on Sepolia has no real value, costs nothing, and exists only for testing.
+
+Right now, Letters to Ko Ko Ye lives on Sepolia. That means:
+
+- The technology works exactly as it would on real Ethereum
+- Your letters are still permanent on the test network
+- No real money is involved at any point — not even behind the scenes
+
+Think of it like a dress rehearsal. The performance is real, the actors are real, the words are real — but it's not opening night yet.
+
+---
+
+### When will it move to real Ethereum?
+
+Moving from Sepolia to real Ethereum (called "mainnet") is called deploying to production. It's the same contract, the same code, the same experience — just on the real network instead of the test one.
+
+When that happens, the letters written on Sepolia won't automatically carry over (they live on a different network). But the project — the rules, the design, the experience — is fully ready. The only difference is which notebook the words get written in.
+
+For now, Sepolia means you can write letters knowing the whole system works, without anyone spending real money to test it.
+
+---
+
+### A quick map of the blockchain world (so you're not lost if you hear these words)
+
+| Word | What it actually means |
+|---|---|
+| Ethereum | The blockchain this project is built on — like the country |
+| Sepolia | The test version of Ethereum — like a training ground |
+| Mainnet | The real Ethereum network where real value lives |
+| ETH | The currency of Ethereum, like dollars in the US |
+| Gas | The tiny fee paid to the network every time something is saved |
+| Smart contract | A set of rules that lives on the blockchain and runs automatically |
+| Wallet | A unique ID on the blockchain — not a place for your bank money |
+| Transaction | Any action that saves something new to the blockchain |
+
+You don't need to memorize any of this. But if someone mentions one of these words, now you know what neighborhood it belongs to.
+
+---
+
 ### One last thing
 
 If you write a letter here, it will be there long after both of us are gone.
@@ -156,6 +207,24 @@ That's not a scary thing. That's the whole point.
 | Frontend | React 18, Vite, Privy React SDK, ethers.js v6, plain CSS |
 | Auth | Privy (email + Google only, embedded wallet auto-created on login) |
 | Gas sponsorship | Backend relay wallet (see below) |
+
+### Network
+
+**Current:** Sepolia testnet (chain ID 11155111)
+
+Sepolia is used because it mirrors mainnet behavior exactly — EVM-identical, same tooling, same contract deployment flow — while keeping real funds out of scope during development. The contract address is set in both `backend/.env` and `frontend/.env`.
+
+**RPC:** Infura or Alchemy Sepolia endpoint (configured in `.env`)
+
+**Explorer:** https://sepolia.etherscan.io — paste the contract address to see all transactions live
+
+**Faucets for test ETH:**
+- sepoliafaucet.com
+- faucet.quicknode.com/ethereum/sepolia
+
+**Mainnet migration:** Drop-in — same Solidity contract, same ABI, new address in `.env`. No code changes needed. Letters on Sepolia do not carry over (separate chain state).
+
+---
 
 ### Contract
 
