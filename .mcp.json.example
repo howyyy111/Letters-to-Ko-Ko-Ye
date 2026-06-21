@@ -2,12 +2,9 @@
   "mcpServers": {
     "ethers-sepolia": {
       "command": "npx",
-      "args": [
-        "-y",
-        "mcp-ethers-wallet"
-      ],
+      "args": ["-y", "mcp-ethers-wallet"],
       "env": {
-        "RPC_URL": "https://eth-sepolia.g.alchemy.com/v2/vZL45FR0U1wxyM8RFecre",
+        "RPC_URL": "https://eth-sepolia.g.alchemy.com/v2/YOUR_ALCHEMY_API_KEY",
         "CHAIN_ID": "11155111",
         "NETWORK_NAME": "sepolia"
       }

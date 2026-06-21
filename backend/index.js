@@ -7,15 +7,18 @@ import { hasUserReceivedDrip, recordDrip } from './database.js';
 
 const app = express();
 app.use(express.json());
+const allowedOrigin = process.env.NODE_ENV === 'production'
+    ? process.env.FRONTEND_URL
+    : (process.env.FRONTEND_URL || 'http://localhost:5173');
+if (!allowedOrigin) throw new Error('FRONTEND_URL must be set in production');
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: allowedOrigin,
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 const privy = new PrivyClient(process.env.PRIVY_APP_ID, process.env.PRIVY_APP_SECRET);
 const DRIP_AMOUNT = ethers.parseEther('0.01');
-const dripInFlight = new Set();
 
 const MESSAGES_ABI = [
     "function getAllMessages() external view returns (tuple(uint256 ticketNumber, address sender, string text, uint256 timestamp, string reply, bool hasReply, uint256 replyTimestamp)[])",
@@ -49,36 +52,37 @@ app.post('/api/drip', async (req, res) => {
         }
 
         const privyUserId = claims.userId;
+        if (!privyUserId) {
+            return res.status(401).json({ error: 'Could not identify user' });
+        }
+
+        const user = await privy.getUser(privyUserId);
+        const ownedWallets = (user.linkedAccounts ?? [])
+            .filter(a => a.type === 'wallet')
+            .map(a => a.address?.toLowerCase());
+        if (!ownedWallets.includes(walletAddress.toLowerCase())) {
+            return res.status(403).json({ error: 'Wallet not owned by this account' });
+        }
 
         if (hasUserReceivedDrip(privyUserId)) {
             return res.json({ success: true, alreadyDripped: true, message: 'Wallet already funded' });
         }
 
-        if (dripInFlight.has(privyUserId)) {
-            return res.json({ success: true, alreadyDripped: true, message: 'Drip already in progress' });
+        const sponsor = getSponsorWallet();
+        const balance = await getProvider().getBalance(sponsor.address);
+
+        if (balance < DRIP_AMOUNT) {
+            return res.status(503).json({ error: 'Sponsor wallet is low on funds. Please try again later.' });
         }
 
-        dripInFlight.add(privyUserId);
+        const tx = await sponsor.sendTransaction({ to: walletAddress, value: DRIP_AMOUNT });
+        await tx.wait();
 
-        try {
-            const sponsor = getSponsorWallet();
-            const balance = await getProvider().getBalance(sponsor.address);
+        recordDrip(privyUserId, walletAddress, tx.hash);
 
-            if (balance < DRIP_AMOUNT) {
-                return res.status(503).json({ error: 'Sponsor wallet is low on funds. Please try again later.' });
-            }
-
-            const tx = await sponsor.sendTransaction({ to: walletAddress, value: DRIP_AMOUNT });
-            await tx.wait();
-
-            recordDrip(privyUserId, walletAddress, tx.hash);
-
-            return res.json({ success: true, alreadyDripped: false, txHash: tx.hash, message: 'Drip sent successfully' });
-        } finally {
-            dripInFlight.delete(privyUserId);
-        }
+        return res.json({ success: true, alreadyDripped: false, txHash: tx.hash, message: 'Drip sent successfully' });
     } catch (err) {
-        console.error('Drip error:', err);
+        console.error('Drip error:', err.message, err.code);
         return res.status(500).json({ error: 'Something went wrong. Please try again.' });
     }
 });
@@ -100,7 +104,7 @@ app.get('/api/messages', async (req, res) => {
 
         return res.json({ success: true, messages });
     } catch (err) {
-        console.error('Messages error:', err);
+        console.error('Messages error:', err.message, err.code);
         return res.status(500).json({ error: 'Failed to fetch messages from blockchain.' });
     }
 });

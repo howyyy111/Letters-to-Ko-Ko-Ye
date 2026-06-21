@@ -3,3 +3,5 @@ node_modules/
 *.db
 dist/
 .DS_Store
+.mcp.json
+backend/drips.json

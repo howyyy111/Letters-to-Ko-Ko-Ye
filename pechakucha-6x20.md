@@ -1,7 +1,9 @@
 ---
 marp: true
 theme: default
-paginate: false
+paginate: true
+transition: fade
+# PechaKucha: 6 slides, 20s auto-advance. Do not change the count.
 auto-advance: 20
 style: |
   section {
@@ -20,85 +22,78 @@ style: |
   p  { font-size: 1.15rem; line-height: 1.7; color: #3d2010; }
   code { background: #f0e2c0; padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.95rem; }
   ul { text-align: left; font-size: 1.1rem; line-height: 1.8; }
-  .tag { display: inline-block; background: #d4a017; color: #fff; padding: 0.2em 0.7em; border-radius: 20px; font-size: 0.85rem; margin: 0.2em; }
+  strong { color: #8B2A1A; }
 ---
 
-# Letters to Ko Ko Ye ✉️
+<!-- slide 1 -->
+# Ko Ko Ye will read your letter.
 
-### A public blockchain guestbook on Sepolia testnet
+She's a real person. This is a real guestbook.
+And every message is written **directly onto the blockchain** — permanent, public, unstoppable.
 
-Anyone can write a letter — **no crypto knowledge needed.**
-Ko Ko Ye can read and reply to every one, forever.
+You don't need crypto. You don't need a wallet.
+You just need something to say.
 
 *VibeCode Tour · Cohort 1 · howyyy111*
 
 ---
 
-## The Problem It Solves
+<!-- slide 2 -->
+# "I want to write to her — but how?"
 
-Most blockchain apps are **too hard for normal people.**
+Most blockchain apps greet you with a wall of jargon.
+*Install MetaMask. Buy ETH. Approve transaction. Pay gas.*
 
-Letters to Ko Ko Ye flips that:
+By the time you figure it out, the moment is gone.
 
-- Login with **email or Google** — no MetaMask required
-- Gas fees are **sponsored** — users pay nothing
-- Messages are **permanent** — on-chain, forever
-- Ko Ko Ye gets a private **reply panel** to respond
-
-*Non-crypto users. Real blockchain. Zero friction.*
+Ko Ko Ye's friends shouldn't have to solve a puzzle
+just to say **"I miss you."**
 
 ---
 
-## How It's Built
+<!-- slide 3 -->
+# A letter. Forever. In 30 seconds.
 
-**3-layer stack:**
+**Letters to Ko Ko Ye** — a blockchain guestbook anyone can use.
 
-- **Smart contract** — Solidity on Sepolia, compiled with Hardhat (32 tests ✅)
-- **Backend / Serverless** — Privy auth + ETH drip sponsor wallet + Upstash Redis
-- **Frontend** — React + Vite + Privy embedded wallets
+- Sign in with **email or Google** — no wallet needed
+- Gas is **fully sponsored** — you pay absolutely nothing
+- Your words are **on-chain** — permanent, censorship-proof
+- Ko Ko Ye has a **private reply panel** — she writes back
 
-**Key decisions:**
-- Replaced `better-sqlite3` (broke on Node v24) → plain JSON file locally
-- Replaced `@vercel/kv` (discontinued) → Upstash Redis
-- `dripInFlight` Set prevents double-drip race condition
-
----
-
-## MCP · Skill · Agent
-
-**MCP** — `.mcp.json` wires in the Sepolia blockchain tools so Claude Code can query the network directly during development
-
-**Skill** — `.claude/skills/letters-to-kokoye/SKILL.md` teaches Claude how to add Burmese translations and top up the sponsor wallet step-by-step
-
-**Agent** — `.claude/agents/wall-monitor.md` is a dashboard agent: run it to get a live summary of all messages on the wall + sponsor wallet balance
-
-*All three were actively used — not just placeholder files.*
+*The blockchain remembers. Even when everything else forgets.*
 
 ---
 
-## One Feature, End-to-End
+<!-- slide 4 -->
+# How I built it (with Claude as a teammate)
 
-**Writing a letter (the vertical slice):**
+- **MCP:** Claude could query the Sepolia blockchain live during dev — catching bugs before users did
+- **Skill:** A custom skill taught Claude to add Burmese translations and top up the sponsor wallet, step by step
+- **Agent:** A wall-monitor agent gives a live dashboard — all letters, all balances, one command
 
-1. User clicks "Leave your letter" → Privy modal opens
-2. Signs in with email/Google → embedded wallet created automatically
-3. Backend drips **0.001 Sepolia ETH** to their wallet (sponsor pays)
-4. User types message → signs transaction with their new wallet
-5. Smart contract stores it on-chain with a ticket number (`#001`, `#002`…)
-6. Letter appears on the Wall immediately, searchable, paginated
-
-*Every step works. No crypto knowledge needed at any point.*
+*Claude didn't just write code. It understood the project.*
 
 ---
 
-## What's Next
+<!-- slide 5 -->
+# Why this one is different
 
-**Transfer ownership** — hand the contract's reply panel to Ko Ko Ye's real wallet (script already written: `transfer-ownership.js`)
+Most apps are **rented** — shut down the server, gone forever.
 
-**Fund the sponsor wallet** — top up with Sepolia ETH so more users can write letters
+This one is **owned** — by the blockchain, by the people who wrote to her.
 
-**Myanmar language** — translations already live in `translations.js`, Ko Ko Ye can edit them directly
+Letter #001 exists whether the website is up or not.
+Whether I maintain it or not.
+Whether Ko Ko Ye is reachable or not.
 
-**Ship it** — deploy to Vercel, share the URL, let people write letters forever
+**The letters will outlast all of us.**
 
-*The blockchain part is permanent. The letters will outlast the website.*
+---
+
+<!-- slide 6 -->
+# Done checklist
+
+- [x] repo public
+- [x] MCP + skill + agent used
+- [ ] report.md in team repo
