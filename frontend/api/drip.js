@@ -1,8 +1,9 @@
 import { PrivyClient } from '@privy-io/server-auth';
 import { ethers } from 'ethers';
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
 
 const privy = new PrivyClient(process.env.PRIVY_APP_ID, process.env.PRIVY_APP_SECRET);
+const redis = new Redis({ url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN });
 const DRIP_AMOUNT = ethers.parseEther('0.001');
 const dripInFlight = new Set();
 
@@ -38,7 +39,7 @@ export default async function handler(req, res) {
     const privyUserId = claims.userId;
     const kvKey = `drip:${privyUserId}`;
 
-    const alreadyDripped = await kv.exists(kvKey);
+    const alreadyDripped = await redis.exists(kvKey);
     if (alreadyDripped) {
       return res.json({ success: true, alreadyDripped: true, message: 'Wallet already funded' });
     }
@@ -60,7 +61,7 @@ export default async function handler(req, res) {
       const tx = await sponsor.sendTransaction({ to: walletAddress, value: DRIP_AMOUNT });
       await tx.wait();
 
-      await kv.set(kvKey, { walletAddress, txHash: tx.hash, createdAt: new Date().toISOString() });
+      await redis.set(kvKey, { walletAddress, txHash: tx.hash, createdAt: new Date().toISOString() });
 
       return res.json({ success: true, alreadyDripped: false, txHash: tx.hash, message: 'Drip sent successfully' });
     } finally {
